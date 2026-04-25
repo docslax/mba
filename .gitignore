@@ -1,0 +1,6 @@
+**/*:Zone.Identifier
+**/.env
+**/.env.*
+!**/.env.example
+**/config/*.json.save
+**/config/*.local.*

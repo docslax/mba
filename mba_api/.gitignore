@@ -1,4 +1,7 @@
 .env
 .env.*
 !.env.example
+config/*.json.save
+config/*.local.*
+*:Zone.Identifier
 node_modules/
