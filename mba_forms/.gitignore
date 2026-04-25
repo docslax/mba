@@ -13,6 +13,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+!.env.production
 config/*.json.save
 config/*.local.*
 *:Zone.Identifier

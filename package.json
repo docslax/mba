@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "concurrently \"cd mba_api && npm start\" \"cd mba_forms && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

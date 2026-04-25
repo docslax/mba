@@ -4,3 +4,6 @@
 !**/.env.example
 **/config/*.json.save
 **/config/*.local.*
+**/node_modules/
+**/dist
+**/dist-ssr
