@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mba-local-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mbaofbc_app
+      POSTGRES_USER: mbaofbc_api
+      POSTGRES_PASSWORD: mba_local_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - mba-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U mbaofbc_api -d mbaofbc_app" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mba-postgres-data:

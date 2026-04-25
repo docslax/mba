@@ -1,0 +1,9 @@
+{
+  "production": {
+    "username": "mbaofbc_api",
+    "password": "D+3#wfmj4*~uBB",
+    "database": "mba_db_prod",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

@@ -1,0 +1,15 @@
+# Enable URL rewriting
+RewriteEngine On
+# If the requested file or directory exists, serve it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Redirect all non-existent requests to /main
+RewriteRule ^.*$ /index.html [L,QSA]
+
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/mbaofbc/mba_forms"
+PassengerBaseURI "/"
+PassengerNodejs "/home/mbaofbc/nodevenv/mba_forms/24/bin/node"
+PassengerAppType node
+PassengerStartupFile index.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
