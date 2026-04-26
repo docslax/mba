@@ -8,7 +8,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Input,
   Select,
   SimpleGrid,
@@ -24,6 +23,7 @@ import {
 import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import SubmissionConfirmationModal from "./SubmissionConfirmationModal";
+import { Layout } from "./layout/Layout";
 
 type SubmittedOrderSummary = {
   orderId: number;
@@ -279,7 +279,7 @@ export default function ShirtOrderForm() {
   }) => (
     <TableContainer border="1px" borderColor="gray.200" rounded="md" mt={4}>
       <Table size="sm" variant="striped">
-        <Thead bg="blue.50">
+        <Thead bg="green.50">
           <Tr>
             <Th minW="140px" fontWeight="bold">
               Measurement
@@ -289,7 +289,7 @@ export default function ShirtOrderForm() {
                 key={size}
                 textAlign="center"
                 fontWeight="bold"
-                bg={shirtSize === size ? "blue.200" : "transparent"}
+                bg={shirtSize === size ? "green.200" : "transparent"}
               >
                 {size}
               </Th>
@@ -307,7 +307,7 @@ export default function ShirtOrderForm() {
                   key={`${row.measurement}-${size}`}
                   textAlign="center"
                   fontSize="xs"
-                  bg={shirtSize === size ? "blue.100" : "transparent"}
+                  bg={shirtSize === size ? "green.100" : "transparent"}
                   fontWeight={shirtSize === size ? "600" : "normal"}
                 >
                   {row[size.toLowerCase()] || "-"}
@@ -321,243 +321,239 @@ export default function ShirtOrderForm() {
   );
 
   return (
-    <Container maxW="lg" py={10}>
-      <Heading textAlign="center" size="lg" mb={2}>
-        Master Bowlers Association of BC
-      </Heading>
-      <Heading textAlign="center" size="md" mb={4}>
-        Golf Shirt Order Form
-      </Heading>
-      <Text textAlign="center" mb={6}>
-        $60.00 Sizes XS – XL &nbsp;|&nbsp; $70.00 Sizes 2XL – 6XL
-      </Text>
+    <Layout title="Golf Shirt Order Form">
+      <Container maxW="lg" py={0}>
+        <Text textAlign="center" mb={6}>
+          $60.00 Sizes XS – XL &nbsp;|&nbsp; $70.00 Sizes 2XL – 6XL
+        </Text>
 
-      <Box
-        as="form"
-        bg="gray.50"
-        p={6}
-        rounded="md"
-        shadow="sm"
-        onSubmit={handleSubmit}
-      >
-        {submitError && (
-          <Alert status="error" mb={4} rounded="md">
-            <AlertIcon />
-            {submitError}
-          </Alert>
-        )}
+        <Box
+          as="form"
+          bg="gray.50"
+          p={6}
+          rounded="md"
+          shadow="sm"
+          onSubmit={handleSubmit}
+        >
+          {submitError && (
+            <Alert status="error" mb={4} rounded="md">
+              <AlertIcon />
+              {submitError}
+            </Alert>
+          )}
 
-        <SimpleGrid columns={[1, 2]} spacing={4}>
-          <FormControl isRequired>
-            <FormLabel>Full Name</FormLabel>
+          <SimpleGrid columns={[1, 2]} spacing={4}>
+            <FormControl isRequired>
+              <FormLabel>Full Name</FormLabel>
+              <Input
+                name="name"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Phone Number</FormLabel>
+              <Input
+                name="phone"
+                placeholder="(555) 123-4567"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </FormControl>
+          </SimpleGrid>
+
+          <FormControl mt={4} isRequired>
+            <FormLabel>Address</FormLabel>
             <Input
-              name="name"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="address"
+              placeholder="123 Main Street"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               disabled={isSubmitting}
             />
           </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Phone Number</FormLabel>
+          <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
+            <FormControl isRequired>
+              <FormLabel>City</FormLabel>
+              <Input
+                name="city"
+                placeholder="Vancouver"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Postal Code</FormLabel>
+              <Input
+                name="postalCode"
+                placeholder="V6B 1A1"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </FormControl>
+          </SimpleGrid>
+
+          <FormControl mt={4} isRequired>
+            <FormLabel>Email</FormLabel>
             <Input
-              name="phone"
-              placeholder="(555) 123-4567"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
             />
           </FormControl>
-        </SimpleGrid>
 
-        <FormControl mt={4} isRequired>
-          <FormLabel>Address</FormLabel>
-          <Input
-            name="address"
-            placeholder="123 Main Street"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            disabled={isSubmitting}
-          />
-        </FormControl>
-
-        <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
-          <FormControl isRequired>
-            <FormLabel>City</FormLabel>
+          <FormControl mt={4} isRequired>
+            <FormLabel>Name on Shirt</FormLabel>
             <Input
-              name="city"
-              placeholder="Vancouver"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              name="shirtName"
+              placeholder="Your name"
+              value={shirtName}
+              onChange={(e) => setShirtName(e.target.value)}
               disabled={isSubmitting}
             />
           </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Postal Code</FormLabel>
-            <Input
-              name="postalCode"
-              placeholder="V6B 1A1"
-              value={postalCode}
-              onChange={(e) => setPostalCode(e.target.value)}
-              disabled={isSubmitting}
-            />
-          </FormControl>
-        </SimpleGrid>
 
-        <FormControl mt={4} isRequired>
-          <FormLabel>Email</FormLabel>
-          <Input
-            type="email"
-            name="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isSubmitting}
-          />
-        </FormControl>
+          <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
+            <FormControl isRequired>
+              <FormLabel>Shirt Type</FormLabel>
+              <Select
+                value={shirtType}
+                onChange={(e) => {
+                  setShirtType(e.target.value);
+                  setShirtSize(e.target.value === "Men" ? "M" : "M");
+                }}
+                disabled={isSubmitting}
+              >
+                <option value="Men">Men</option>
+                <option value="Ladies">Ladies</option>
+              </Select>
+            </FormControl>
 
-        <FormControl mt={4} isRequired>
-          <FormLabel>Name on Shirt</FormLabel>
-          <Input
-            name="shirtName"
-            placeholder="Your name"
-            value={shirtName}
-            onChange={(e) => setShirtName(e.target.value)}
-            disabled={isSubmitting}
-          />
-        </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Shirt Size</FormLabel>
+              <Select
+                value={shirtSize}
+                onChange={(e) => setShirtSize(e.target.value)}
+                disabled={isSubmitting}
+              >
+                {(shirtType === "Men" ? MEN_SIZES : LADY_SIZES).map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </SimpleGrid>
 
-        <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
-          <FormControl isRequired>
-            <FormLabel>Shirt Type</FormLabel>
-            <Select
-              value={shirtType}
-              onChange={(e) => {
-                setShirtType(e.target.value);
-                setShirtSize(e.target.value === "Men" ? "M" : "M");
-              }}
+          <Box mt={3} mb={4}>
+            <Button
+              size="sm"
+              variant="ghost"
+              colorScheme="green"
+              onClick={() => setShowSizingGuide(!showSizingGuide)}
+              rightIcon={
+                showSizingGuide ? <ChevronUpIcon /> : <ChevronDownIcon />
+              }
               disabled={isSubmitting}
             >
-              <option value="Men">Men</option>
-              <option value="Ladies">Ladies</option>
-            </Select>
-          </FormControl>
+              {showSizingGuide ? "Hide" : "Show"} Sizing Guide
+            </Button>
+          </Box>
 
-          <FormControl isRequired>
-            <FormLabel>Shirt Size</FormLabel>
-            <Select
-              value={shirtSize}
-              onChange={(e) => setShirtSize(e.target.value)}
-              disabled={isSubmitting}
-            >
-              {(shirtType === "Men" ? MEN_SIZES : LADY_SIZES).map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
-        </SimpleGrid>
+          <Collapse in={showSizingGuide} animateOpacity>
+            <SizingGuideTable
+              data={shirtType === "Men" ? menSizingData : ladiesSizingData}
+              sizes={shirtType === "Men" ? MEN_SIZES : LADY_SIZES}
+            />
+          </Collapse>
 
-        <Box mt={3} mb={4}>
+          <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
+            <FormControl isRequired>
+              <FormLabel># of Shirts Ordered</FormLabel>
+              <Input
+                type="number"
+                min={1}
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                disabled={isSubmitting}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Total Amount</FormLabel>
+              <Input value={`$${totalAmount.toFixed(2)}`} readOnly />
+            </FormControl>
+          </SimpleGrid>
+
           <Button
-            size="sm"
-            variant="ghost"
-            colorScheme="blue"
-            onClick={() => setShowSizingGuide(!showSizingGuide)}
-            rightIcon={
-              showSizingGuide ? <ChevronUpIcon /> : <ChevronDownIcon />
-            }
+            type="submit"
+            colorScheme="green"
+            mt={6}
+            w="full"
             disabled={isSubmitting}
+            isLoading={isSubmitting}
+            loadingText="Submitting..."
           >
-            {showSizingGuide ? "Hide" : "Show"} Sizing Guide
+            Submit Order
           </Button>
         </Box>
 
-        <Collapse in={showSizingGuide} animateOpacity>
-          <SizingGuideTable
-            data={shirtType === "Men" ? menSizingData : ladiesSizingData}
-            sizes={shirtType === "Men" ? MEN_SIZES : LADY_SIZES}
-          />
-        </Collapse>
+        <Flex direction="column" align="center" mt={8} fontSize="sm">
+          <Text>
+            Email Order Form to: <strong>MBAofBC.shirts@gmail.com</strong>
+          </Text>
+          <Text>
+            E-transfer payment to: <strong>MBAofBC.payments@gmail.com</strong>
+          </Text>
+        </Flex>
 
-        <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
-          <FormControl isRequired>
-            <FormLabel># of Shirts Ordered</FormLabel>
-            <Input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
-              disabled={isSubmitting}
-            />
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>Total Amount</FormLabel>
-            <Input value={`$${totalAmount.toFixed(2)}`} readOnly />
-          </FormControl>
-        </SimpleGrid>
-
-        <Button
-          type="submit"
-          colorScheme="blue"
-          mt={6}
-          w="full"
-          disabled={isSubmitting}
-          isLoading={isSubmitting}
-          loadingText="Submitting..."
-        >
-          Submit Order
-        </Button>
-      </Box>
-
-      <Flex direction="column" align="center" mt={8} fontSize="sm">
-        <Text>
-          Email Order Form to: <strong>MBAofBC.shirts@gmail.com</strong>
-        </Text>
-        <Text>
-          E-transfer payment to: <strong>MBAofBC.payments@gmail.com</strong>
-        </Text>
-      </Flex>
-
-      <SubmissionConfirmationModal
-        isOpen={isConfirmationOpen}
-        onClose={() => setIsConfirmationOpen(false)}
-        title="Order submitted successfully"
-        subtitle={
-          submittedOrder
-            ? `Thank you ${submittedOrder.name}. Please review your order details and complete payment.`
-            : undefined
-        }
-        summaryItems={
-          submittedOrder
-            ? [
-                { label: "Order #", value: String(submittedOrder.orderId) },
-                { label: "Name on shirt", value: submittedOrder.shirtName },
-                {
-                  label: "Shirt",
-                  value: `${submittedOrder.shirtType} ${submittedOrder.shirtSize}`,
-                },
-                { label: "Quantity", value: String(submittedOrder.quantity) },
-                {
-                  label: "Total",
-                  value: `$${submittedOrder.totalAmount}`,
-                },
-              ]
-            : []
-        }
-        nextSteps={
-          submittedOrder
-            ? [
-                `Send e-transfer to ${submittedOrder.paymentEmail}.`,
-                `Use "Order #${submittedOrder.orderId}" as the payment note/reference.`,
-                "Keep this confirmation until payment is complete.",
-              ]
-            : []
-        }
-      />
-    </Container>
+        <SubmissionConfirmationModal
+          isOpen={isConfirmationOpen}
+          onClose={() => setIsConfirmationOpen(false)}
+          title="Order submitted successfully"
+          subtitle={
+            submittedOrder
+              ? `Thank you ${submittedOrder.name}. Please review your order details and complete payment.`
+              : undefined
+          }
+          summaryItems={
+            submittedOrder
+              ? [
+                  { label: "Order #", value: String(submittedOrder.orderId) },
+                  { label: "Name on shirt", value: submittedOrder.shirtName },
+                  {
+                    label: "Shirt",
+                    value: `${submittedOrder.shirtType} ${submittedOrder.shirtSize}`,
+                  },
+                  { label: "Quantity", value: String(submittedOrder.quantity) },
+                  {
+                    label: "Total",
+                    value: `$${submittedOrder.totalAmount}`,
+                  },
+                ]
+              : []
+          }
+          nextSteps={
+            submittedOrder
+              ? [
+                  `Send e-transfer to ${submittedOrder.paymentEmail}.`,
+                  `Use "Order #${submittedOrder.orderId}" as the payment note/reference.`,
+                  "Keep this confirmation until payment is complete.",
+                ]
+              : []
+          }
+        />
+      </Container>
+    </Layout>
   );
 }

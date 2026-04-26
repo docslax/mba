@@ -5,7 +5,9 @@
   font-family: sans-serif;
 }
 
-h1, h2, p {
+h1,
+h2,
+p {
   text-align: center;
 }
 
@@ -21,7 +23,8 @@ label {
   font-weight: bold;
 }
 
-input, select {
+input,
+select {
   padding: 0.4rem;
   font-size: 1rem;
   margin-top: 0.25rem;
@@ -33,4 +36,80 @@ button {
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
+}
+
+.header-bar {
+  background: #1f4e38;
+  color: white;
+  padding: 12px 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  height: 48px;
+}
+
+.form-nav {
+  background: #1f4e38;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.form-nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.form-nav a:hover {
+  color: #f4b400;
+}
+
+.form-banner {
+  background: #2f6f4f;
+  color: white;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.header-bar {
+  background: #1f4e38;
+  color: white;
+  padding: 12px 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  height: 48px;
+}
+
+.form-nav {
+  background: #1f4e38;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.form-nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.form-nav a:hover {
+  color: #f4b400;
+}
+
+.form-banner {
+  background: #2f6f4f;
+  color: white;
+  text-align: center;
+  padding: 24px 0;
 }
