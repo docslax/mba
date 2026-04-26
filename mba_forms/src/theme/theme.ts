@@ -1,5 +1,6 @@
 // src/theme/theme.ts
-import { extendTheme } from "@chakra-ui/react";
+import { background, extendTheme } from "@chakra-ui/react";
+import { body } from "framer-motion/client";
 
 export const theme = extendTheme({
   colors: {
@@ -8,10 +9,18 @@ export const theme = extendTheme({
       main: "#2f6f4f",
       accent: "#f4b400",
       header: "#7ab27b",
+      background: "#f4f6f5",
     },
   },
   fonts: {
     heading: "Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif",
     body: "Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif",
+  },
+  styles: {
+    global: {
+      body: {
+        bg: "brand.background",
+      },
+    },
   },
 });
