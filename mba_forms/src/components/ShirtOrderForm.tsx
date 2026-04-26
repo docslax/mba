@@ -508,15 +508,6 @@ export default function ShirtOrderForm() {
           </Button>
         </Box>
 
-        <Flex direction="column" align="center" mt={8} fontSize="sm">
-          <Text>
-            Email Order Form to: <strong>MBAofBC.shirts@gmail.com</strong>
-          </Text>
-          <Text>
-            E-transfer payment to: <strong>MBAofBC.payments@gmail.com</strong>
-          </Text>
-        </Flex>
-
         <SubmissionConfirmationModal
           isOpen={isConfirmationOpen}
           onClose={() => setIsConfirmationOpen(false)}
