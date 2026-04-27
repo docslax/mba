@@ -5,3 +5,4 @@ config/*.json.save
 config/*.local.*
 *:Zone.Identifier
 node_modules/
+deployment.sh

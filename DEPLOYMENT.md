@@ -89,15 +89,20 @@ PORT=3000
 API_KEY=4c6295c0376e8f81fe6da138fac82c808652c05af8040b7b0aea466226e46253
 CORS_ORIGIN=https://forms.mbaofbc.com
 
-DB_HOST=localhost
+DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_NAME=yourusername_mbaofbc_app
 DB_USER=yourusername_mbaofbc_api
 DB_PASSWORD=your_db_password_here
+DB_SSL=false
+DB_SSL_REJECT_UNAUTHORIZED=false
 
 FROM_EMAIL=forms@mbaofbc.com
 ADMIN_EMAIL=MBAofBC.shirts@gmail.com
 ```
+
+Use `DB_HOST=127.0.0.1` (not `localhost`) to avoid IPv6 `::1` pg_hba errors on shared hosting.
+If your host requires encrypted PostgreSQL connections, set `DB_SSL=true`.
 
 **4c. Create the Node.js app in cPanel**
 

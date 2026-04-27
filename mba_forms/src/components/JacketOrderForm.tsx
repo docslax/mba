@@ -3,27 +3,17 @@ import {
   AlertIcon,
   Box,
   Button,
-  Collapse,
   Container,
   FormControl,
   FormLabel,
   Input,
   Select,
   SimpleGrid,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import SubmissionConfirmationModal from "./SubmissionConfirmationModal";
 import { Layout } from "./layout/Layout";
-import { ladiesSizingData, menSizingData } from "../constants";
 
 type ProductPricingTier = {
   sizes: string[];
@@ -41,30 +31,29 @@ type ProductRecord = {
 type SubmittedOrderSummary = {
   orderId: number;
   name: string;
-  shirtName: string;
-  shirtType: string;
-  shirtSize: string;
+  jacketName: string;
+  jacketType: string;
+  jacketSize: string;
   quantity: number;
   totalAmount: string;
   paymentEmail: string;
 };
 
-export default function ShirtOrderForm() {
+export default function JacketOrderForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [email, setEmail] = useState("");
-  const [shirtName, setShirtName] = useState("");
-  const [shirtType, setShirtType] = useState("Men");
-  const [shirtSize, setShirtSize] = useState("M");
+  const [jacketName, setJacketName] = useState("");
+  const [jacketType, setJacketType] = useState("Men");
+  const [jacketSize, setJacketSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
-  const [showSizingGuide, setShowSizingGuide] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const [productId, setProductId] = useState<number | null>(null);
   const [pricingTiers, setPricingTiers] = useState<ProductPricingTier[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [submittedOrder, setSubmittedOrder] =
     useState<SubmittedOrderSummary | null>(null);
@@ -86,21 +75,21 @@ export default function ShirtOrderForm() {
         }
 
         const products: ProductRecord[] = await response.json();
-        const shirtProduct = products.find((product) =>
-          product.name.toLowerCase().includes("shirt"),
+        const jacketProduct = products.find((product) =>
+          product.name.toLowerCase().includes("jacket"),
         );
 
-        if (!shirtProduct) {
-          throw new Error("Shirt product configuration not found.");
+        if (!jacketProduct) {
+          throw new Error("Jacket product configuration not found.");
         }
 
-        setProductId(shirtProduct.id);
-        setPricingTiers(shirtProduct.pricingConfig?.tiers ?? []);
+        setProductId(jacketProduct.id);
+        setPricingTiers(jacketProduct.pricingConfig?.tiers ?? []);
       } catch (error) {
         const errorMessage =
           error instanceof Error
             ? error.message
-            : "Unable to load shirt pricing configuration.";
+            : "Unable to load jacket pricing configuration.";
         setSubmitError(errorMessage);
       }
     };
@@ -114,25 +103,24 @@ export default function ShirtOrderForm() {
     );
     return tier ? Number(tier.price) : 0;
   };
-
   const selectableSizes = Array.from(
     new Set(pricingTiers.flatMap((pricingTier) => pricingTier.sizes)),
   );
 
   useEffect(() => {
     if (selectableSizes.length === 0) {
-      if (shirtSize !== "M") {
-        setShirtSize("M");
+      if (jacketSize !== "M") {
+        setJacketSize("M");
       }
       return;
     }
 
-    if (!selectableSizes.includes(shirtSize)) {
-      setShirtSize(selectableSizes[0]);
+    if (!selectableSizes.includes(jacketSize)) {
+      setJacketSize(selectableSizes[0]);
     }
-  }, [selectableSizes, shirtSize]);
+  }, [selectableSizes, jacketSize]);
 
-  const price = getPriceForSize(shirtSize);
+  const price = getPriceForSize(jacketSize);
   const totalAmount = price * quantity;
   const pricingSummary =
     pricingTiers.length > 0
@@ -142,7 +130,7 @@ export default function ShirtOrderForm() {
               `$${Number(tier.price).toFixed(2)} Sizes ${tier.sizes.join(", ")}`,
           )
           .join(" | ")
-      : "$60.00 Sizes XS – XL | $70.00 Sizes 2XL – 6XL";
+      : "$110.00 Sizes XS – 2XL | $121 Sizes 3XL – 4XL | $126 Sizes 5XL – 6XL";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -156,7 +144,7 @@ export default function ShirtOrderForm() {
       !city ||
       !postalCode ||
       !email ||
-      !shirtName
+      !jacketName
     ) {
       setSubmitError("Please fill in all required fields.");
       return;
@@ -164,13 +152,13 @@ export default function ShirtOrderForm() {
 
     if (!productId) {
       setSubmitError(
-        "Shirt product pricing is not loaded yet. Please try again.",
+        "Jacket product pricing is not loaded yet. Please try again.",
       );
       return;
     }
 
     if (price <= 0) {
-      setSubmitError(`No price configured for shirt size ${shirtSize}.`);
+      setSubmitError(`No price configured for jacket size ${jacketSize}.`);
       return;
     }
 
@@ -191,11 +179,11 @@ export default function ShirtOrderForm() {
           postalCode,
           email,
           productId,
-          // Send as generic product fields for consistency with new schema
-          productType: "Shirt",
-          productName: shirtName,
-          productCategory: shirtType,
-          productSize: shirtSize,
+          // Send as generic product fields for flexibility
+          productType: "Jacket",
+          productName: jacketName,
+          productSize: jacketSize,
+          productCategory: jacketType,
           quantity,
           totalAmount,
         }),
@@ -210,9 +198,9 @@ export default function ShirtOrderForm() {
       setSubmittedOrder({
         orderId: data.order.id,
         name,
-        shirtName,
-        shirtType,
-        shirtSize,
+        jacketName,
+        jacketType,
+        jacketSize,
         quantity,
         totalAmount: totalAmount.toFixed(2),
         paymentEmail: "MBAofBC.payments@gmail.com",
@@ -226,11 +214,10 @@ export default function ShirtOrderForm() {
       setCity("");
       setPostalCode("");
       setEmail("");
-      setShirtName("");
-      setShirtType("Men");
-      setShirtSize("M");
+      setJacketName("");
+      setJacketType("Men");
+      setJacketSize("M");
       setQuantity(1);
-      setShowSizingGuide(false);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to submit order";
@@ -240,58 +227,8 @@ export default function ShirtOrderForm() {
     }
   };
 
-  const SizingGuideTable = ({
-    data,
-    sizes,
-  }: {
-    data: Array<Record<string, string>>;
-    sizes: string[];
-  }) => (
-    <TableContainer border="1px" borderColor="gray.200" rounded="md" mt={4}>
-      <Table size="sm" variant="striped">
-        <Thead bg="green.50">
-          <Tr>
-            <Th minW="140px" fontWeight="bold">
-              Measurement
-            </Th>
-            {sizes.map((size) => (
-              <Th
-                key={size}
-                textAlign="center"
-                fontWeight="bold"
-                bg={shirtSize === size ? "green.200" : "transparent"}
-              >
-                {size}
-              </Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((row) => (
-            <Tr key={row.measurement}>
-              <Td fontWeight="600" fontSize="sm">
-                {row.measurement}
-              </Td>
-              {sizes.map((size) => (
-                <Td
-                  key={`${row.measurement}-${size}`}
-                  textAlign="center"
-                  fontSize="xs"
-                  bg={shirtSize === size ? "green.100" : "transparent"}
-                  fontWeight={shirtSize === size ? "600" : "normal"}
-                >
-                  {row[size.toLowerCase()] || "-"}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
-  );
-
   return (
-    <Layout title="Golf Shirt Order Form">
+    <Layout title="Jacket Order Form">
       <Container maxW="lg" py={0}>
         <Text textAlign="center" mb={6}>
           {pricingSummary}
@@ -383,23 +320,23 @@ export default function ShirtOrderForm() {
           </FormControl>
 
           <FormControl mt={4} isRequired>
-            <FormLabel>Name on Shirt</FormLabel>
+            <FormLabel>Name on Jacket</FormLabel>
             <Input
-              name="shirtName"
+              name="jacketName"
               placeholder="Your name"
-              value={shirtName}
-              onChange={(e) => setShirtName(e.target.value)}
+              value={jacketName}
+              onChange={(e) => setJacketName(e.target.value)}
               disabled={isSubmitting}
             />
           </FormControl>
 
           <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
             <FormControl isRequired>
-              <FormLabel>Shirt Type</FormLabel>
+              <FormLabel>Jacket Type</FormLabel>
               <Select
-                value={shirtType}
+                value={jacketType}
                 onChange={(e) => {
-                  setShirtType(e.target.value);
+                  setJacketType(e.target.value);
                 }}
                 disabled={isSubmitting}
               >
@@ -409,10 +346,10 @@ export default function ShirtOrderForm() {
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel>Shirt Size</FormLabel>
+              <FormLabel>Jacket Size</FormLabel>
               <Select
-                value={shirtSize}
-                onChange={(e) => setShirtSize(e.target.value)}
+                value={jacketSize}
+                onChange={(e) => setJacketSize(e.target.value)}
                 disabled={isSubmitting}
               >
                 {selectableSizes.map((size) => (
@@ -424,31 +361,21 @@ export default function ShirtOrderForm() {
             </FormControl>
           </SimpleGrid>
 
-          <Box mt={3} mb={4}>
-            <Button
-              size="sm"
-              variant="ghost"
-              colorScheme="green"
-              onClick={() => setShowSizingGuide(!showSizingGuide)}
-              rightIcon={
-                showSizingGuide ? <ChevronUpIcon /> : <ChevronDownIcon />
-              }
-              disabled={isSubmitting}
-            >
-              {showSizingGuide ? "Hide" : "Show"} Sizing Guide
-            </Button>
-          </Box>
-
-          <Collapse in={showSizingGuide} animateOpacity>
-            <SizingGuideTable
-              data={shirtType === "Men" ? menSizingData : ladiesSizingData}
-              sizes={selectableSizes}
-            />
-          </Collapse>
+          <Alert status="warning" mt={4} mb={4} rounded="md">
+            <AlertIcon />
+            <Box>
+              <Text fontWeight="bold">NOTE: Sizing Guide Coming Soon</Text>
+              <Text fontSize="sm">
+                We're working on detailed sizing information. For now, please
+                note that the Jackets fit small, order at least one size up from
+                your normal shirt size.
+              </Text>
+            </Box>
+          </Alert>
 
           <SimpleGrid columns={[1, 2]} spacing={4} mt={4}>
             <FormControl isRequired>
-              <FormLabel># of Shirts Ordered</FormLabel>
+              <FormLabel># of Jackets Ordered</FormLabel>
               <Input
                 type="number"
                 min={1}
@@ -490,10 +417,10 @@ export default function ShirtOrderForm() {
             submittedOrder
               ? [
                   { label: "Order #", value: String(submittedOrder.orderId) },
-                  { label: "Name on shirt", value: submittedOrder.shirtName },
+                  { label: "Name on jacket", value: submittedOrder.jacketName },
                   {
-                    label: "Shirt",
-                    value: `${submittedOrder.shirtType} ${submittedOrder.shirtSize}`,
+                    label: "Jacket",
+                    value: `${submittedOrder.jacketType} ${submittedOrder.jacketSize}`,
                   },
                   { label: "Quantity", value: String(submittedOrder.quantity) },
                   {
@@ -507,7 +434,7 @@ export default function ShirtOrderForm() {
             submittedOrder
               ? [
                   `Send e-transfer to ${submittedOrder.paymentEmail}.`,
-                  `Use "Shirt Order #${submittedOrder.orderId} - ${submittedOrder.name}" as the payment note/reference.`,
+                  `Use "Jacket Order #${submittedOrder.orderId} - ${submittedOrder.name}" as the payment note/reference.`,
                   "Keep this confirmation until payment is complete.",
                 ]
               : []

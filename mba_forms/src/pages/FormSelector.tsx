@@ -24,13 +24,13 @@ const AVAILABLE_FORMS: FormOption[] = [
       "Order a custom golf shirt with sizing options for men's and ladies' styles.",
     path: "/forms/shirt-order",
   },
-  // Add more forms here in the future
-  // {
-  //   id: "custom-form-2",
-  //   title: "Another Form",
-  //   description: "Description of another form type",
-  //   path: "/forms/another-form",
-  // },
+  {
+    id: "jacket-order",
+    title: "Jacket Order",
+    description:
+      "Order a custom jacket with sizing options for men's and ladies' styles.",
+    path: "/forms/jacket-order",
+  },
 ];
 
 export default function FormSelector() {

@@ -29,3 +29,5 @@ config/*.local.*
 *.njsproj
 *.sln
 *.sw?
+
+deployment.sh
