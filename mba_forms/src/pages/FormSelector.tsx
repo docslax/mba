@@ -31,6 +31,13 @@ const AVAILABLE_FORMS: FormOption[] = [
       "Order a custom jacket with sizing options for men's and ladies' styles.",
     path: "/forms/jacket-order",
   },
+  {
+    id: "membership-application",
+    title: "Membership Application",
+    description:
+      "Apply for 2025/2026 membership with participant and non-participant fee options.",
+    path: "/forms/membership-application",
+  },
 ];
 
 export default function FormSelector() {

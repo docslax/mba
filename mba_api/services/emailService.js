@@ -4,12 +4,30 @@ const FROM_EMAIL = process.env.FROM_EMAIL || "some@example.com";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@example.com";
 const PAYMENT_EMAIL = process.env.PAYMENT_EMAIL || "payment@example.com";
 
-// Create transporter using sendmail (available on shared hosting)
-const transporter = nodemailer.createTransport({
-  sendmail: true,
-  newline: "unix",
-  path: "/usr/sbin/sendmail",
-});
+// Lazy transporter — set EMAIL_TRANSPORT=ethereal in .env to capture emails locally.
+// A preview URL will be logged to the console after each send.
+let _transporter = null;
+
+const getTransporter = async () => {
+  if (_transporter) return _transporter;
+
+  if (process.env.EMAIL_TRANSPORT === "ethereal") {
+    const testAccount = await nodemailer.createTestAccount();
+    _transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      auth: { user: testAccount.user, pass: testAccount.pass },
+    });
+  } else {
+    _transporter = nodemailer.createTransport({
+      sendmail: true,
+      newline: "unix",
+      path: "/usr/sbin/sendmail",
+    });
+  }
+
+  return _transporter;
+};
 
 function formatMoney(value) {
   const numericValue = Number.parseFloat(value);
@@ -246,13 +264,17 @@ Status: Awaiting payment at ${PAYMENT_EMAIL}
  */
 const sendOrderConfirmation = async (order) => {
   try {
+    const t = await getTransporter();
     const template = orderConfirmationTemplate(order);
-    await transporter.sendMail({
+    const info = await t.sendMail({
       from: FROM_EMAIL,
       to: order.email,
       ...template,
     });
     console.log(`Order confirmation sent to ${order.email}`);
+    if (process.env.EMAIL_TRANSPORT === "ethereal") {
+      console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
+    }
     return true;
   } catch (error) {
     console.error(
@@ -269,13 +291,17 @@ const sendOrderConfirmation = async (order) => {
 const sendOrderNotification = async (order, adminEmail = null) => {
   const recipient = adminEmail || ADMIN_EMAIL;
   try {
+    const t = await getTransporter();
     const template = orderAdminNotificationTemplate(order);
-    await transporter.sendMail({
+    const info = await t.sendMail({
       from: FROM_EMAIL,
       to: recipient,
       ...template,
     });
     console.log(`Order notification sent to ${recipient}`);
+    if (process.env.EMAIL_TRANSPORT === "ethereal") {
+      console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
+    }
     return true;
   } catch (error) {
     console.error(`Failed to send order notification to ${recipient}:`, error);
@@ -288,7 +314,8 @@ const sendOrderNotification = async (order, adminEmail = null) => {
  */
 const testEmailConnection = async () => {
   try {
-    await transporter.verify();
+    const t = await getTransporter();
+    await t.verify();
     console.log("Email service is ready to send messages");
     return true;
   } catch (error) {
