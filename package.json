@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "concurrently \"cd mba_api && npm start\" \"cd mba_forms && npm run dev\""
+    "dev": "concurrently --kill-others-on-fail --names API,WEB --prefix-colors green,cyan \"cd mba_api && npm run dev\" \"cd mba_forms && npm run dev\""
   },
   "devDependencies": {
     "baseline-browser-mapping": "^2.10.43",
